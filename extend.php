@@ -5,14 +5,13 @@
  *
  * Copyright (c) 2018 FriendsOfFlarum.
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace FoF\PreventNecrobumping;
 
 use Flarum\Extend;
-use Flarum\Frontend\Document;
 use Flarum\Post\Event\Saving;
 use Illuminate\Events\Dispatcher;
 
@@ -23,8 +22,8 @@ return [
         ->content(Content\ExtensionSettings::class),
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js'),
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
     function (Dispatcher $events) {
         $events->listen(Saving::class, Listeners\ValidateNecrobumping::class);
-    }
+    },
 ];

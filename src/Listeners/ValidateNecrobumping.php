@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2018 FriendsOfFlarum.
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -24,11 +24,12 @@ class ValidateNecrobumping
         $this->validator = $validator;
     }
 
-    public function handle(Saving $event) {
+    public function handle(Saving $event)
+    {
         if (!$event->post->exists && $event->post->discussion->last_posted_at->diffInDays(\Carbon\Carbon::now())) {
             $this->validator->assertValid([
-                'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping')
+                'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
             ]);
-        };
+        }
     }
 }
