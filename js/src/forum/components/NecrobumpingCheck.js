@@ -8,21 +8,28 @@ export default class NecrobumpingCheck extends Component {
     }
 
     view() {
+        const customTitle = app.data['fof-prevent-necrobumping.message.title'];
+        const customDescription = app.data['fof-prevent-necrobumping.message.description'];
+        const customAgreement = app.data['fof-prevent-necrobumping.message.agreement'];
+
+        const time = moment.duration(this.props.days, 'days').humanize();
+
         return (
             <div>
                 <div className="Alert">
                     <span className="Alert-body">
                         <h4>
-                            {app.translator.transChoice('fof-prevent-necrobumping.forum.composer.warning.title', this.props.days, {
-                                days: this.props.days,
-                            })}
+                            {(customTitle && customTitle.replace(/\[time]/i, time)) ||
+                                app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.title', {
+                                    time,
+                                })}
                         </h4>
 
-                        <p>{app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>
+                        <p>{customDescription || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>
 
                         <label>
                             <input type="checkbox" onchange={this.onchange.bind(this)} />
-                            {app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.checkbox_label')}
+                            {customAgreement || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.checkbox_label')}
                         </label>
                     </span>
                 </div>
