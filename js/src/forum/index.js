@@ -5,6 +5,8 @@ import ReplyComposer from 'flarum/components/ReplyComposer';
 import NecrobumpingCheck from './components/NecrobumpingCheck';
 
 app.initializers.add('fof/prevent-necrobumping', () => {
+    const days = Number(app.data['fof-prevent-necrobumping.days']);
+
     extend(TextEditor.prototype, 'view', function(vdom) {
         const $textarea = vdom.children.find(e => e.tag === 'textarea');
 
@@ -13,19 +15,21 @@ app.initializers.add('fof/prevent-necrobumping', () => {
     });
 
     extend(ReplyComposer.prototype, 'headerItems', function(items) {
-        const days = Number(app.data['fof-prevent-necrobumping.days']);
-
-        if (Date.now() - this.props.discussion.lastPostedAt().getTime() < days * 86400000) return;
-
-        items.add(
-            'fof-necrobumping',
-            NecrobumpingCheck.component({
-                days,
-                editor: this.editor,
-                set: v => (this.fofNecrobumping = v),
-                disable: d => (this.editor.disabled = d),
-            })
-        );
+        if (
+            moment()
+                .subtract(days, 'days')
+                .isAfter(this.props.discussion.lastPostedAt().getTime())
+        ) {
+            items.add(
+                'fof-necrobumping',
+                NecrobumpingCheck.component({
+                    days,
+                    editor: this.editor,
+                    set: v => (this.fofNecrobumping = v),
+                    disable: d => (this.editor.disabled = d),
+                })
+            );
+        }
     });
 
     extend(ReplyComposer.prototype, 'data', function(data) {
