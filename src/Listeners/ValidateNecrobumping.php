@@ -27,7 +27,9 @@ class ValidateNecrobumping
 
     public function handle(Saving $event)
     {
-        if ($event->post->exists || $event->post->number == 1) return;
+        if ($event->post->exists || $event->post->number == 1) {
+            return;
+        }
 
         $lastPostedAt = $event->post->discussion->last_posted_at;
 
