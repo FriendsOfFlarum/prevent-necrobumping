@@ -34,6 +34,5 @@ class ExtensionSettings
         foreach ($this->keys as $key) {
             $document->payload[$this->prefix.$key] = $this->settings->get($this->prefix.$key);
         }
-//        $document->payload['fof-prevent-necrobumping.days'] = $this->settings->get('fof-prevent-necrobumping.days');
     }
 }
