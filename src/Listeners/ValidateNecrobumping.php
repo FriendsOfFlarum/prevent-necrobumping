@@ -13,16 +13,22 @@ namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
 use Flarum\Post\Event\Saving;
+use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\PreventNecrobumping\Validators\NecrobumpingPostValidator;
 use Illuminate\Support\Arr;
 
 class ValidateNecrobumping
 {
     protected $validator;
+    /**
+     * @var SettingsRepositoryInterface
+     */
+    private $settings;
 
-    public function __construct(NecrobumpingPostValidator $validator)
+    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings)
     {
         $this->validator = $validator;
+        $this->settings = $settings;
     }
 
     public function handle(Saving $event)
@@ -32,8 +38,9 @@ class ValidateNecrobumping
         }
 
         $lastPostedAt = $event->post->discussion->last_posted_at;
+        $days = $this->settings->get('fof-prevent-necrobumping.days');
 
-        if ($lastPostedAt != null && $lastPostedAt->diffInDays(Carbon::now())) {
+        if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
             $this->validator->assertValid([
                 'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
             ]);
