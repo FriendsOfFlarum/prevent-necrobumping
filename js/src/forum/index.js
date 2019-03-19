@@ -1,6 +1,8 @@
-import { extend, override } from 'flarum/extend';
+import { extend } from 'flarum/extend';
 import TextEditor from 'flarum/components/TextEditor';
 import ReplyComposer from 'flarum/components/ReplyComposer';
+
+import find from 'array.prototype.find';
 
 import NecrobumpingCheck from './components/NecrobumpingCheck';
 
@@ -8,7 +10,7 @@ app.initializers.add('fof/prevent-necrobumping', () => {
     const days = Number(app.data['fof-prevent-necrobumping.days']);
 
     extend(TextEditor.prototype, 'view', function(vdom) {
-        const $textarea = vdom.children.find(e => e.tag === 'textarea');
+        const $textarea = find(vdom.children, e => e.tag === 'textarea');
 
         if (!this.disabled) delete $textarea.attrs.disabled;
         else $textarea.attrs.disabled = true;
