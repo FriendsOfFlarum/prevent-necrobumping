@@ -1,0 +1,18 @@
+fof-prevent-necrobumping:
+  forum:
+    composer:
+      warning:
+        title: Esta discusión ha estado inactiva por <b>{time}</b>.
+        description: Es muy probable de que no requiera mayor atención por lo que reactivarla podría sería.
+        checkbox_label: Estoy consciente de que esta discusión es antigua pero igualmente me gustaría responder.
+        error: Esta discusión es demasiado antigua para responder.
+
+  admin:
+    settings:
+      days_label: Días
+      days_help: Una discusión se considerará antigua tras un período de tiempo definido, después de haberse publicado la última respuesta.
+
+      message_title_label: Título de mensaje personalizado
+      message_title_help: 'Utiliza <code>[time]</code> para el período de tiempo, ejemplo "14 días".'
+      message_description_label: Descripción del mensaje personalizado
+message_agreement_label: Mensaje de acuerdo del usuario (Casilla de verificación)
