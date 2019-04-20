@@ -3,7 +3,7 @@ fof-prevent-necrobumping:
     composer:
       warning:
         title: Esta discusión ha estado inactiva por <b>{time}</b>.
-        description: Es muy probable de que no requiera mayor atención por lo que reactivarla podría sería.
+        description: Es muy probable de que no requiera mayor atención por lo que reactivarla no sería de gran utilidad.
         checkbox_label: Estoy consciente de que esta discusión es antigua pero igualmente me gustaría responder.
         error: Esta discusión es demasiado antigua para responder.
 
