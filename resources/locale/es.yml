@@ -13,6 +13,6 @@ fof-prevent-necrobumping:
       days_help: Una discusión se considerará antigua tras un período de tiempo definido, después de haberse publicado la última respuesta.
 
       message_title_label: Título de mensaje personalizado
-      message_title_help: 'Utiliza <code>[time]</code> para el período de tiempo, ejemplo "14 días".'
+      message_title_help: 'Utiliza <code>[time]</code> para el período de tiempo, por ejemplo "14 días".'
       message_description_label: Descripción del mensaje personalizado
 message_agreement_label: Mensaje de acuerdo del usuario (Casilla de verificación)
