@@ -10,7 +10,7 @@ fof-prevent-necrobumping:
   admin:
     settings:
       days_label: Días
-      days_help: Una discusión se considerará antigua tras un período de tiempo definido, después de haberse publicado la última respuesta.
+      days_help: Una discusión se considerará antigua trasncurrido un período de tiempo definido, después de haberse publicado la última respuesta.
 
       message_title_label: Título de mensaje personalizado
       message_title_help: 'Utiliza <code>[time]</code> para el período de tiempo, por ejemplo "14 días".'
