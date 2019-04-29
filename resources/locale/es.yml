@@ -15,4 +15,4 @@ fof-prevent-necrobumping:
       message_title_label: Título de mensaje personalizado
       message_title_help: 'Utiliza <code>[time]</code> para el período de tiempo, por ejemplo "14 días".'
       message_description_label: Descripción del mensaje personalizado
-message_agreement_label: Mensaje de acuerdo del usuario (Casilla de verificación)
+      message_agreement_label: Mensaje de acuerdo del usuario (Casilla de verificación)
