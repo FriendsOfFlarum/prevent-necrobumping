@@ -11,18 +11,21 @@
 
 namespace FoF\PreventNecrobumping;
 
-use Flarum\Extend;
+use Flarum\Extend as Vanilla;
 use Flarum\Post\Event\Saving;
+use FoF\Extend\Extend;
 use Illuminate\Events\Dispatcher;
 
 return [
-    (new Extend\Frontend('forum'))
+    (new Vanilla\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less')
-        ->content(Content\ExtensionSettings::class),
-    (new Extend\Frontend('admin'))
+        ->css(__DIR__.'/resources/less/forum.less'),
+    (new Vanilla\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js'),
-    new Extend\Locales(__DIR__.'/resources/locale'),
+    new Vanilla\Locales(__DIR__.'/resources/locale'),
+    (new Extend\ExtensionSettings())
+        ->setPrefix('fof-prevent-necrobumping.')
+        ->addKeys(['days', 'message.title', 'message.description', 'message.agreement']),
     function (Dispatcher $events) {
         $events->listen(Saving::class, Listeners\ValidateNecrobumping::class);
     },
