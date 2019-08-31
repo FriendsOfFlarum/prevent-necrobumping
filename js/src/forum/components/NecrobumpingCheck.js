@@ -1,6 +1,13 @@
 import Component from 'flarum/Component';
+import Checkbox from 'flarum/components/Checkbox'
 
 export default class NecrobumpingCheck extends Component {
+    init() {
+        super.init();
+
+        this.checked = m.prop(false);
+    }
+
     config(isInitialized) {
         if (isInitialized) return;
 
@@ -17,30 +24,42 @@ export default class NecrobumpingCheck extends Component {
         return (
             <div>
                 <div className="Alert">
-                    <span className="Alert-body">
-                        <h4>
+                    <div className="Alert-body">
+                        <div className="hide">
+                          <h4>
                             {(customTitle && customTitle.replace(/\[time]/i, time)) ||
-                                app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.title', {
-                                    time,
-                                })}
-                        </h4>
+                            app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.title', {
+                              time,
+                            })}
+                          </h4>
 
-                        <p>{customDescription || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>
+                          <p>{customDescription || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>
+                        </div>
 
-                        <label>
-                            <input type="checkbox" onchange={this.onchange.bind(this)} />
-                            {customAgreement || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.checkbox_label')}
-                        </label>
-                    </span>
+                        {Checkbox.component({
+                            state: this.checked(),
+                            onchange: this.onchange.bind(this),
+                            children: customAgreement || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.checkbox_label'),
+                        })}
+                    </div>
                 </div>
             </div>
         );
     }
 
     onchange() {
-        this.checked = !this.checked;
+        const newStatus = !this.checked();
+        const interval = setInterval(() => m.redraw());
 
-        this.props.set(this.checked);
-        this.props.disable(!this.checked);
+        if (newStatus) {
+          this.$('.hide').slideUp(250, () => clearInterval(interval));
+        } else {
+          this.$('.hide').slideDown(250, () => clearInterval(interval));
+        }
+
+        this.props.set(newStatus);
+        this.props.disable(!newStatus);
+
+        this.checked(newStatus);
     }
 }
