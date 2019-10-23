@@ -7,8 +7,6 @@ import find from 'array.prototype.find';
 import NecrobumpingCheck from './components/NecrobumpingCheck';
 
 app.initializers.add('fof/prevent-necrobumping', () => {
-    const days = Number(app.data['fof-prevent-necrobumping.days']);
-
     extend(TextEditor.prototype, 'view', function(vdom) {
         const $textarea = find(vdom.children, e => e.tag === 'textarea');
 
@@ -17,7 +15,10 @@ app.initializers.add('fof/prevent-necrobumping', () => {
     });
 
     extend(ReplyComposer.prototype, 'headerItems', function(items) {
+        const days = this.props.discussion && this.props.discussion.attribute('fof-prevent-necrobumping');
+
         if (
+            days &&
             moment()
                 .subtract(days, 'days')
                 .isAfter(this.props.discussion.lastPostedAt().getTime())

@@ -1,5 +1,5 @@
 import Component from 'flarum/Component';
-import Checkbox from 'flarum/components/Checkbox'
+import Checkbox from 'flarum/components/Checkbox';
 
 export default class NecrobumpingCheck extends Component {
     init() {
@@ -26,14 +26,14 @@ export default class NecrobumpingCheck extends Component {
                 <div className="Alert">
                     <div className="Alert-body">
                         <div className="hide">
-                          <h4>
-                            {(customTitle && customTitle.replace(/\[time]/i, time)) ||
-                            app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.title', {
-                              time,
-                            })}
-                          </h4>
+                            <h4>
+                                {(customTitle && customTitle.replace(/\[time]/i, time)) ||
+                                    app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.title', {
+                                        time,
+                                    })}
+                            </h4>
 
-                          <p>{customDescription || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>
+                            <p>{customDescription || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>
                         </div>
 
                         {Checkbox.component({
@@ -52,9 +52,9 @@ export default class NecrobumpingCheck extends Component {
         const interval = setInterval(() => m.redraw());
 
         if (newStatus) {
-          this.$('.hide').slideUp(250, () => clearInterval(interval));
+            this.$('.hide').slideUp(250, () => clearInterval(interval));
         } else {
-          this.$('.hide').slideDown(250, () => clearInterval(interval));
+            this.$('.hide').slideDown(250, () => clearInterval(interval));
         }
 
         this.props.set(newStatus);
