@@ -35,7 +35,8 @@ class ValidateNecrobumping
         $this->settings = $settings;
     }
 
-    public function subscribe(Dispatcher $events) {
+    public function subscribe(Dispatcher $events)
+    {
         $events->listen(Saving::class, [$this, 'saving']);
         $events->listen(Serializing::class, [$this, 'serializing']);
     }
@@ -56,7 +57,8 @@ class ValidateNecrobumping
         }
     }
 
-    public function serializing(Serializing $event) {
+    public function serializing(Serializing $event)
+    {
         if ($event->isSerializer(DiscussionSerializer::class)) {
             $event->attributes['fof-prevent-necrobumping'] = $this->getDays($event->model);
         }
@@ -64,9 +66,11 @@ class ValidateNecrobumping
 
     /**
      * @param Discussion $discussion
+     *
      * @return int
      */
-    protected function getDays($discussion) {
+    protected function getDays($discussion)
+    {
         $days = $this->settings->get('fof-prevent-necrobumping.days');
         $tags = $discussion->tags;
 
@@ -82,7 +86,6 @@ class ValidateNecrobumping
                     ? null
                     : $tagDays->min();
             }
-
         }
 
         return is_nan($days) || $days < 1 ? null : (int) $days;
