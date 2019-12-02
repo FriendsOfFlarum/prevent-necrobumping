@@ -12,10 +12,12 @@
 namespace FoF\PreventNecrobumping;
 
 use Flarum\Extend as Vanilla;
+use FoF\Components\Extend\AddFofComponents;
 use FoF\Extend\Extend;
 use Illuminate\Events\Dispatcher;
 
 return [
+    new AddFofComponents(),
     (new Vanilla\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less'),

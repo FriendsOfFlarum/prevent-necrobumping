@@ -1,7 +1,10 @@
-import SettingsModal from '@fof/components/admin/settings/SettingsModal';
-import NumberItem from '@fof/components/admin/settings/items/NumberItem';
-import StringItem from '@fof/components/admin/settings/items/StringItem';
 import classList from 'flarum/utils/classList';
+import { settings } from '@fof-components';
+
+const {
+    SettingsModal,
+    items: { StringItem, NumberItem },
+} = settings;
 
 const sortTags = tags => flarum.core.compat['tags/utils/sortTags'](tags);
 
