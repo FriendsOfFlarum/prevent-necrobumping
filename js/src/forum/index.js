@@ -10,8 +10,10 @@ app.initializers.add('fof/prevent-necrobumping', () => {
     extend(TextEditor.prototype, 'view', function(vdom) {
         const $textarea = find(vdom.children, e => e.tag === 'textarea');
 
-        if (!this.disabled) delete $textarea.attrs.disabled;
-        else $textarea.attrs.disabled = true;
+        if ($textarea) {
+            if (!this.disabled) delete $textarea.attrs.disabled;
+            else $textarea.attrs.disabled = true;
+        }
     });
 
     extend(ReplyComposer.prototype, 'headerItems', function(items) {
