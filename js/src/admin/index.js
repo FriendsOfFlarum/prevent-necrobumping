@@ -6,7 +6,7 @@ const {
     items: { StringItem, NumberItem },
 } = settings;
 
-const sortTags = tags => flarum.core.compat['tags/utils/sortTags'](tags);
+const sortTags = (tags) => flarum.core.compat['tags/utils/sortTags'](tags);
 
 app.initializers.add('fof/prevent-necrobumping', () => {
     app.extensionSettings['fof-prevent-necrobumping'] = () =>
@@ -40,7 +40,7 @@ app.initializers.add('fof/prevent-necrobumping', () => {
                             <p className="helpText">{app.translator.trans('fof-prevent-necrobumping.admin.settings.tags_help')}</p>
 
                             <div className="necrobumping--tags">
-                                {sortTags(app.store.all('tags')).map(tag => (
+                                {sortTags(app.store.all('tags')).map((tag) => (
                                     <div
                                         className={classList([
                                             'Form-group',
