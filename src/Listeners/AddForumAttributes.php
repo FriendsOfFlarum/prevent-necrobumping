@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/prevent-necrobumping.
+ *
+ * Copyright (c) 2020 FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\PreventNecrobumping\Listeners;
 
 use Flarum\Api\Serializer\DiscussionSerializer;
@@ -21,6 +30,7 @@ class AddForumAttributes
     public function __invoke(DiscussionSerializer $serializer, Discussion $discussion, array $attributes): array
     {
         $attributes['fof-prevent-necrobumping'] = $this->getDays($discussion);
+
         return $attributes;
     }
 
@@ -51,4 +61,3 @@ class AddForumAttributes
         return is_nan($days) || $days < 1 ? null : (int) $days;
     }
 }
-
