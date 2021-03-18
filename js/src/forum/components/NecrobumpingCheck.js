@@ -1,6 +1,6 @@
-import Component from 'flarum/Component';
-import Checkbox from 'flarum/components/Checkbox';
-import Stream from 'flarum/utils/Stream';
+import Component from 'flarum/common/Component';
+import Checkbox from 'flarum/common/components/Checkbox';
+import Stream from 'flarum/common/utils/Stream';
 
 export default class NecrobumpingCheck extends Component {
     oninit(vnode) {

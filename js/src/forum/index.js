@@ -1,6 +1,6 @@
-import { extend } from 'flarum/extend';
-import TextEditor from 'flarum/components/TextEditor';
-import ReplyComposer from 'flarum/components/ReplyComposer';
+import { extend } from 'flarum/common/extend';
+import TextEditor from 'flarum/common/components/TextEditor';
+import ReplyComposer from 'flarum/common/components/ReplyComposer';
 
 import NecrobumpingCheck from './components/NecrobumpingCheck';
 

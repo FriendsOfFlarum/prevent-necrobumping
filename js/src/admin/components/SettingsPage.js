@@ -1,6 +1,6 @@
 import { settings } from '@fof-components';
-import classList from 'flarum/utils/classList';
-import ExtensionPage from 'flarum/components/ExtensionPage';
+import classList from 'flarum/common/utils/classList';
+import ExtensionPage from 'flarum/common/components/ExtensionPage';
 
 const {
     items: { StringItem, NumberItem },
@@ -62,7 +62,7 @@ export default class SettingsPage extends ExtensionPage {
 
                     {this.submitButton()}
                 </div>
-            </div>
+            </div>,
         ];
     }
 }
