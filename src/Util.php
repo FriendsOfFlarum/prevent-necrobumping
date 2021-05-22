@@ -1,8 +1,15 @@
 <?php
 
+/*
+ * This file is part of fof/prevent-necrobumping.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace FoF\PreventNecrobumping;
-
 
 use Flarum\Discussion\Discussion;
 use Flarum\Settings\SettingsRepositoryInterface;

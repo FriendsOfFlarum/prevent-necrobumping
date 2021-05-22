@@ -12,7 +12,6 @@
 namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
-use Flarum\Discussion\Discussion;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\PreventNecrobumping\Util;
