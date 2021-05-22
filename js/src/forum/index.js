@@ -1,6 +1,7 @@
-import { extend } from 'flarum/common/extend';
-import TextEditor from 'flarum/common/components/TextEditor';
-import ReplyComposer from 'flarum/common/components/ReplyComposer';
+import app from 'flarum/forum/app';
+
+import { extend, override } from 'flarum/common/extend';
+import ReplyComposer from 'flarum/forum/components/ReplyComposer';
 
 import NecrobumpingCheck from './components/NecrobumpingCheck';
 
@@ -18,17 +19,10 @@ const isNecrobumping = (discussion) => {
 };
 
 app.initializers.add('fof/prevent-necrobumping', () => {
-    extend(TextEditor.prototype, 'view', function (vdom) {
-        if (!app.composer.bodyMatches(ReplyComposer)) return;
+    override(ReplyComposer.prototype, 'view', function (orig, vnode) {
+        this.attrs.disabled = this.attrs.disabled || !this.composer.fields.fofNecrobumping;
 
-        const $textarea = vdom.children && vdom.children.find((e) => e.tag === 'textarea');
-        const composer = app.composer;
-        const { discussion, disabled } = composer.body.attrs;
-
-        if ($textarea && isNecrobumping(discussion)) {
-            if (!disabled) delete $textarea.attrs.disabled;
-            else $textarea.attrs.disabled = true;
-        }
+        return orig(vnode);
     });
 
     extend(ReplyComposer.prototype, 'headerItems', function (items) {
@@ -40,7 +34,6 @@ app.initializers.add('fof/prevent-necrobumping', () => {
                 NecrobumpingCheck.component({
                     days,
                     set: (v) => (this.composer.fields.fofNecrobumping = v),
-                    disable: (d) => (this.composer.body.attrs.disabled = d),
                 })
             );
         }

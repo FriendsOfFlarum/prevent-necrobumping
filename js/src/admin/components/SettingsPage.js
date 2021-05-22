@@ -1,12 +1,14 @@
+import app from 'flarum/admin/app';
+
 import { settings } from '@fof-components';
 import classList from 'flarum/common/utils/classList';
-import ExtensionPage from 'flarum/common/components/ExtensionPage';
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 
 const {
     items: { StringItem, NumberItem },
 } = settings;
 
-const sortTags = (tags) => flarum.core.compat['tags/utils/sortTags'](tags);
+import sortTags from 'flarum/tags/utils/sortTags';
 
 export default class SettingsPage extends ExtensionPage {
     oninit(vnode) {
