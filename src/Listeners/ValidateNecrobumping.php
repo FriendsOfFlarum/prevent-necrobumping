@@ -12,9 +12,9 @@
 namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
-use Flarum\Discussion\Discussion;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
+use FoF\PreventNecrobumping\Util;
 use FoF\PreventNecrobumping\Validators\NecrobumpingPostValidator;
 use Illuminate\Support\Arr;
 
@@ -39,39 +39,12 @@ class ValidateNecrobumping
         }
 
         $lastPostedAt = $event->post->discussion->last_posted_at;
-        $days = $this->getDays($event->post->discussion);
+        $days = Util::getDays($this->settings, $event->post->discussion);
 
         if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
             $this->validator->assertValid([
                 'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
             ]);
         }
-    }
-
-    /**
-     * @param Discussion $discussion
-     *
-     * @return int
-     */
-    protected function getDays($discussion)
-    {
-        $days = $this->settings->get('fof-prevent-necrobumping.days');
-        $tags = $discussion->tags;
-
-        if ($tags && $tags->isNotEmpty()) {
-            $tagDays = $tags->map(function ($tag) {
-                return $this->settings->get("fof-prevent-necrobumping.days.tags.{$tag->id}");
-            })->filter(function ($days) {
-                return $days != null && $days != '' && !is_nan($days) && (int) $days >= 0;
-            });
-
-            if ($tagDays->isNotEmpty()) {
-                $days = $tagDays->contains(0)
-                    ? null
-                    : $tagDays->min();
-            }
-        }
-
-        return is_nan($days) || $days < 1 ? null : (int) $days;
     }
 }

@@ -1,3 +1,5 @@
+import app from 'flarum/admin/app';
+
 import SettingsPage from './components/SettingsPage';
 
 app.initializers.add('fof/prevent-necrobumping', () => {

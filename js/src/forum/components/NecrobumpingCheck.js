@@ -1,3 +1,5 @@
+import app from 'flarum/forum/app';
+
 import Component from 'flarum/common/Component';
 import Checkbox from 'flarum/common/components/Checkbox';
 import Stream from 'flarum/common/utils/Stream';
@@ -7,12 +9,6 @@ export default class NecrobumpingCheck extends Component {
         super.oninit(vnode);
 
         this.checked = Stream(false);
-    }
-
-    oncreate(vnode) {
-        super.oncreate(vnode);
-
-        this.attrs.disable(true);
     }
 
     view() {
@@ -57,7 +53,6 @@ export default class NecrobumpingCheck extends Component {
         }
 
         this.attrs.set(newStatus);
-        this.attrs.disable(!newStatus);
 
         this.checked(newStatus);
     }
