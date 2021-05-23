@@ -20,7 +20,7 @@ const isNecrobumping = (discussion) => {
 
 app.initializers.add('fof/prevent-necrobumping', () => {
     override(ReplyComposer.prototype, 'view', function (orig, vnode) {
-        this.attrs.disabled = this.attrs.disabled || !this.composer.fields.fofNecrobumping;
+        this.attrs.disabled = this.attrs.disabled || (isNecrobumping(this.attrs.discussion) && !this.composer.fields.fofNecrobumping);
 
         return orig(vnode);
     });
