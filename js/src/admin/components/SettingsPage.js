@@ -1,47 +1,44 @@
 import app from 'flarum/admin/app';
-
-import { settings } from '@fof-components';
 import classList from 'flarum/common/utils/classList';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
-
-const {
-    items: { StringItem, NumberItem },
-} = settings;
-
 import sortTags from 'flarum/tags/utils/sortTags';
 
 export default class SettingsPage extends ExtensionPage {
     oninit(vnode) {
         super.oninit(vnode);
-
-        this.setting = this.setting.bind(this);
     }
 
     content() {
         return [
             <div class="container">
                 <div class="NecroPage">
-                    <div className="Form-group">
-                        <label>{app.translator.trans('fof-prevent-necrobumping.admin.settings.days_label')}</label>
-                        <NumberItem name="fof-prevent-necrobumping.days" simple min="0" required setting={this.setting} />
-
-                        <p className="helpText">{app.translator.trans('fof-prevent-necrobumping.admin.settings.days_help')}</p>
-                    </div>
-                    <div className="Form-group">
-                        <label>{app.translator.trans('fof-prevent-necrobumping.admin.settings.message_title_label')}</label>
-                        <StringItem name="fof-prevent-necrobumping.message.title" simple setting={this.setting} />
-
-                        <p className="helpText">{app.translator.trans('fof-prevent-necrobumping.admin.settings.message_title_help')}</p>
-                    </div>
-                    <StringItem name="fof-prevent-necrobumping.message.description" setting={this.setting}>
-                        {app.translator.trans('fof-prevent-necrobumping.admin.settings.message_description_label')}
-                    </StringItem>
-                    <StringItem name="fof-prevent-necrobumping.message.agreement" setting={this.setting}>
-                        {app.translator.trans('fof-prevent-necrobumping.admin.settings.message_agreement_label')}
-                    </StringItem>
+                    {this.buildSettingComponent({
+                        type: 'number',
+                        setting: 'fof-prevent-necrobumping.days',
+                        label: app.translator.trans('fof-prevent-necrobumping.admin.settings.days_label'),
+                        help: app.translator.trans('fof-prevent-necrobumping.admin.settings.days_help'),
+                        min: 0,
+                    })}
+                    {this.buildSettingComponent({
+                        type: 'string',
+                        setting: 'fof-prevent-necrobumping.message.title',
+                        label: app.translator.trans('fof-prevent-necrobumping.admin.settings.message_title_label'),
+                        help: app.translator.trans('fof-prevent-necrobumping.admin.settings.message_title_help'),
+                    })}
+                    {this.buildSettingComponent({
+                        type: 'string',
+                        setting: 'fof-prevent-necrobumping.message.description',
+                        label: app.translator.trans('fof-prevent-necrobumping.admin.settings.message_description_label'),
+                    })}
+                    {this.buildSettingComponent({
+                        type: 'string',
+                        setting: 'fof-prevent-necrobumping.message.agreement',
+                        label: app.translator.trans('fof-prevent-necrobumping.admin.settings.message_agreement_label'),
+                    })}
 
                     {app.store.models.tags && (
                         <div class="Form-group">
+                            <hr />
                             <h3>{app.translator.trans('fof-prevent-necrobumping.admin.settings.tags_title')}</h3>
                             <p className="helpText">{app.translator.trans('fof-prevent-necrobumping.admin.settings.tags_help')}</p>
 
@@ -54,8 +51,12 @@ export default class SettingsPage extends ExtensionPage {
                                             !tag.isPrimary() && !tag.isChild() && 'isSecondary',
                                         ])}
                                     >
-                                        <label>{tag.name()}</label>
-                                        <NumberItem name={`fof-prevent-necrobumping.days.tags.${tag.id()}`} simple min="0" setting={this.setting} />
+                                        {this.buildSettingComponent({
+                                            type: 'number',
+                                            setting: `fof-prevent-necrobumping.days.tags.${tag.id()}`,
+                                            label: tag.name(),
+                                            min: '0',
+                                        })}
                                     </div>
                                 ))}
                             </div>
