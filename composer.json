@@ -44,11 +44,27 @@
                 "color": "#fff"
             },
             "optional-dependencies": [
-              "flarum/tags"
+                "flarum/tags"
             ]
         },
         "flagrow": {
             "discuss": "https://discuss.flarum.org/d/18312"
+        },
+        "flarum-cli": {
+            "modules": {
+                "githubActions": true
+            }
         }
+    },
+    "require-dev": {
+        "flarum/phpstan": "*",
+        "flarum/tags": "*"
+    },
+    "scripts": {
+        "analyse:phpstan": "phpstan analyse",
+        "clear-cache:phpstan": "phpstan clear-result-cache"
+    },
+    "scripts-descriptions": {
+        "analyse:phpstan": "Run static analysis"
     }
 }
