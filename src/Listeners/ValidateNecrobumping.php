@@ -20,7 +20,11 @@ use Illuminate\Support\Arr;
 
 class ValidateNecrobumping
 {
+    /**
+     * @var NecrobumpingPostValidator
+     */
     protected $validator;
+
     /**
      * @var SettingsRepositoryInterface
      */
@@ -34,7 +38,7 @@ class ValidateNecrobumping
 
     public function handle(Saving $event)
     {
-        if ($event->post->exists || $event->post->number == 1) {
+        if ($event->post->exists || $event->post->number === 1) {
             return;
         }
 
