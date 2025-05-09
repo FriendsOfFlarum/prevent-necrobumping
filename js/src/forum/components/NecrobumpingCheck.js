@@ -68,7 +68,7 @@ export default class NecrobumpingCheck extends Component {
       const descriptionText = app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description');
       let descriptionElement = <p>{descriptionText}</p>;
 
-      if (app.forum.attribute('fof-prevent-necrobumping.show_discussion_cta')) {
+      if (app.forum.attribute('fof-prevent-necrobumping.show_discussion_cta') && app.forum.attribute('canStartDiscussion')) {
         const ctaText = app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.cta');
         const ctaButtonText = app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.cta_button');
         const ctaLink = (
