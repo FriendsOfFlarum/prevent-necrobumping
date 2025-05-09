@@ -37,6 +37,5 @@ class Util
         }
 
         return is_nan((float) $days) || (int) $days < 1 ? null : (int) $days;
-
     }
 }
