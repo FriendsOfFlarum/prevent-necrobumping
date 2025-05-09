@@ -4,6 +4,9 @@ import Component from 'flarum/common/Component';
 import Checkbox from 'flarum/common/components/Checkbox';
 import Stream from 'flarum/common/utils/Stream';
 import ItemList from 'flarum/common/utils/ItemList';
+import LinkButton from 'flarum/common/components/LinkButton';
+import Link from 'flarum/common/components/Link';
+import { initiateNewDiscussion } from '../utils/discussionUtils';
 
 export default class NecrobumpingCheck extends Component {
   oninit(vnode) {
@@ -59,7 +62,34 @@ export default class NecrobumpingCheck extends Component {
       100
     );
 
-    items.add('description', <p>{customDescription || app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description')}</p>, 90);
+    if (customDescription) {
+      items.add('description', <p>{customDescription}</p>, 90);
+    } else {
+      const descriptionText = app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.description');
+      let descriptionElement = <p>{descriptionText}</p>;
+
+      if (app.forum.attribute('fof-prevent-necrobumping.show_discussion_cta')) {
+        const ctaText = app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.cta');
+        const ctaButtonText = app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.cta_button');
+        const ctaLink = (
+          <Link
+            onclick={(e) => {
+              e.preventDefault();
+              initiateNewDiscussion();
+            }}
+          >
+            {ctaButtonText}
+          </Link>
+        );
+        descriptionElement = (
+          <p>
+            {descriptionText} {ctaText} {ctaLink}
+          </p>
+        );
+      }
+
+      items.add('description', descriptionElement, 90);
+    }
 
     return items;
   }
