@@ -31,6 +31,10 @@ return [
         ->setPrefix('fof-prevent-necrobumping.')
         ->addKeys(['message.title', 'message.description', 'message.agreement']),
 
+    (new Extend\Settings())
+        ->default('fof-prevent-necrobumping.show_discussion_cta', false)
+        ->serializeToForum('fof-prevent-necrobumping.show_discussion_cta', 'fof-prevent-necrobumping.show_discussion_cta', 'boolval'),
+
     (new Extend\Event())
         ->listen(Saving::class, Listeners\ValidateNecrobumping::class),
 

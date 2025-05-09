@@ -20,6 +20,12 @@ export default class SettingsPage extends ExtensionPage {
             min: 0,
           })}
           {this.buildSettingComponent({
+            type: 'boolean',
+            setting: 'fof-prevent-necrobumping.show_discussion_cta',
+            label: app.translator.trans('fof-prevent-necrobumping.admin.settings.show_discussion_cta_label'),
+            help: app.translator.trans('fof-prevent-necrobumping.admin.settings.show_discussion_cta_help'),
+          })}
+          {this.buildSettingComponent({
             type: 'string',
             setting: 'fof-prevent-necrobumping.message.title',
             label: app.translator.trans('fof-prevent-necrobumping.admin.settings.message_title_label'),
