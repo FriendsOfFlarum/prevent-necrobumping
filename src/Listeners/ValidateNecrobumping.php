@@ -38,12 +38,18 @@ class ValidateNecrobumping
 
     public function handle(Saving $event)
     {
-        if ($event->post->exists || $event->post->number === 1) {
+        $post = $event->post;
+        $discussion = $post->discussion;
+
+        if ($post->exists || $post->number === 1 || !$discussion) {
             return;
         }
 
-        $lastPostedAt = $event->post->discussion->last_posted_at;
-        $days = Util::getDays($this->settings, $event->post->discussion);
+            return;
+        }
+
+        $lastPostedAt = $discussion->last_posted_at;
+        $days = Util::getDays($this->settings, $discussion);
 
         if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
             $this->validator->assertValid([
