@@ -12,9 +12,9 @@
 namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
+use Flarum\Extension\ExtensionManager;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Extension\ExtensionManager;
 use FoF\PreventNecrobumping\Util;
 use FoF\PreventNecrobumping\Validators\NecrobumpingPostValidator;
 use Illuminate\Support\Arr;
