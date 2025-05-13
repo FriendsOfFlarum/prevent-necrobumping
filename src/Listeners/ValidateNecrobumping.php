@@ -12,6 +12,7 @@
 namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
+use Flarum\Extension\ExtensionManager;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\PreventNecrobumping\Util;
@@ -30,20 +31,33 @@ class ValidateNecrobumping
      */
     private $settings;
 
-    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings)
+    /**
+     * @var ExtensionManager
+     */
+    protected $extensions;
+
+    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings, ExtensionManager $extensions)
     {
         $this->validator = $validator;
         $this->settings = $settings;
+        $this->extensions = $extensions;
     }
 
     public function handle(Saving $event)
     {
-        if ($event->post->exists || $event->post->number === 1) {
+        $post = $event->post;
+        $discussion = $post->discussion;
+
+        if ($post->exists || $post->number === 1 || !$discussion) {
             return;
         }
 
-        $lastPostedAt = $event->post->discussion->last_posted_at;
-        $days = Util::getDays($this->settings, $event->post->discussion);
+        if ($this->extensions->isEnabled('fof-byobu') && $discussion->is_private) {
+            return;
+        }
+
+        $lastPostedAt = $discussion->last_posted_at;
+        $days = Util::getDays($this->settings, $discussion);
 
         if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
             $this->validator->assertValid([

@@ -44,7 +44,8 @@
                 "color": "#fff"
             },
             "optional-dependencies": [
-                "flarum/tags"
+                "flarum/tags",
+                "fof/byobu"
             ]
         },
         "flagrow": {
@@ -58,7 +59,8 @@
     },
     "require-dev": {
         "flarum/phpstan": "*",
-        "flarum/tags": "*"
+        "flarum/tags": "*",
+        "fof/byobu": "*"
     },
     "scripts": {
         "analyse:phpstan": "phpstan analyse",
