@@ -5,8 +5,12 @@ import ReplyComposer from 'flarum/forum/components/ReplyComposer';
 
 import NecrobumpingCheck from './components/NecrobumpingCheck';
 
-const isNecrobumping = (discussion) => {
+const isNecrobumping = (app, discussion) => {
   if (!discussion) return false;
+
+  if (app.initializers.has('fof-byobu') && discussion.isPrivateDiscussion()) {
+    return false;
+  }
 
   const days = discussion.attribute('fof-prevent-necrobumping');
   const lastPostedAt = discussion.lastPostedAt();
@@ -20,13 +24,13 @@ const isNecrobumping = (discussion) => {
 
 app.initializers.add('fof/prevent-necrobumping', () => {
   override(ReplyComposer.prototype, 'view', function (orig, vnode) {
-    this.attrs.disabled = this.attrs.disabled || (isNecrobumping(this.attrs.discussion) && !this.composer.fields.fofNecrobumping);
+    this.attrs.disabled = this.attrs.disabled || (isNecrobumping(app, this.attrs.discussion) && !this.composer.fields.fofNecrobumping);
 
     return orig(vnode);
   });
 
   extend(ReplyComposer.prototype, 'headerItems', function (items) {
-    const days = isNecrobumping(this.attrs.discussion);
+    const days = isNecrobumping(app, this.attrs.discussion);
 
     if (days) {
       items.add(

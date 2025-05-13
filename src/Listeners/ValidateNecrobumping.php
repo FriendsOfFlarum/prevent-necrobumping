@@ -14,6 +14,7 @@ namespace FoF\PreventNecrobumping\Listeners;
 use Carbon\Carbon;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\Extension\ExtensionManager;
 use FoF\PreventNecrobumping\Util;
 use FoF\PreventNecrobumping\Validators\NecrobumpingPostValidator;
 use Illuminate\Support\Arr;
@@ -30,10 +31,16 @@ class ValidateNecrobumping
      */
     private $settings;
 
-    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings)
+    /**
+     * @var ExtensionManager
+     */
+    protected $extensions;
+
+    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings, ExtensionManager $extensions)
     {
         $this->validator = $validator;
         $this->settings = $settings;
+        $this->extensions = $extensions;
     }
 
     public function handle(Saving $event)
@@ -45,6 +52,7 @@ class ValidateNecrobumping
             return;
         }
 
+        if ($this->extensions->isEnabled('fof-byobu') && $discussion->is_private) {
             return;
         }
 
