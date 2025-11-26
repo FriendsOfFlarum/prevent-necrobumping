@@ -16,7 +16,7 @@ A [Flarum](http://flarum.org) extension. Warn before necrobumping old discussion
 ### Installation
 
 ```sh
-composer require fof/prevent-necrobumping
+composer require fof/prevent-necrobumping:"*"
 ```
 
 ### Updating
