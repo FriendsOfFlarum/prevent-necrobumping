@@ -55,9 +55,9 @@ class PreventNecrobumpingTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'This is a reply to an active discussion',
                         ],
@@ -86,9 +86,9 @@ class PreventNecrobumpingTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Necrobumping without confirmation',
                         ],
@@ -114,11 +114,11 @@ class PreventNecrobumpingTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
-                            'content' => 'Necrobumping with confirmation',
+                            'content'          => 'Necrobumping with confirmation',
                             'fof-necrobumping' => true,
                         ],
                         'relationships' => [
@@ -133,7 +133,7 @@ class PreventNecrobumpingTest extends TestCase
 
         $body = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertEquals(201, $response->getStatusCode(), 'Response body: ' . json_encode($body));
+        $this->assertEquals(201, $response->getStatusCode(), 'Response body: '.json_encode($body));
         $this->assertEquals('Necrobumping with confirmation', $body['data']['attributes']['content']);
     }
 
@@ -147,9 +147,9 @@ class PreventNecrobumpingTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply to 10 day old discussion with 20 day threshold',
                         ],
@@ -176,9 +176,9 @@ class PreventNecrobumpingTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply to 30 day old discussion without confirmation',
                         ],
@@ -205,9 +205,9 @@ class PreventNecrobumpingTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply to 30 day old discussion with validation disabled',
                         ],

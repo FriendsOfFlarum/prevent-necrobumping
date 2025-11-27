@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/prevent-necrobumping.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\PreventNecrobumping\Api;
 
 use Flarum\Api\Schema;
@@ -21,7 +30,7 @@ class AddDiscussionResourceFields
                 ->nullable()
                 ->get(function (Discussion $discussion, $context) {
                     return Util::getDays($this->settings, $discussion);
-                })
+                }),
         ];
     }
 }

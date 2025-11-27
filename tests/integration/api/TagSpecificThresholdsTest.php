@@ -78,9 +78,9 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply to discussion with tag-specific threshold',
                         ],
@@ -109,9 +109,9 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply without confirmation',
                         ],
@@ -131,11 +131,11 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
-                            'content' => 'Reply with confirmation',
+                            'content'          => 'Reply with confirmation',
                             'fof-necrobumping' => true,
                         ],
                         'relationships' => [
@@ -163,9 +163,9 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply to discussion with disabled validation',
                         ],
@@ -196,9 +196,9 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply without confirmation',
                         ],
@@ -228,9 +228,9 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply to discussion with one tag disabled',
                         ],
@@ -259,9 +259,9 @@ class TagSpecificThresholdsTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/posts', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'posts',
+                        'type'       => 'posts',
                         'attributes' => [
                             'content' => 'Reply without confirmation',
                         ],
