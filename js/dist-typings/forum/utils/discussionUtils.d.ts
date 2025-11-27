@@ -1,9 +1,4 @@
-import IndexPage from 'flarum/forum/components/IndexPage';
 /**
- * Initiates a new discussion either using a provided context or the default
- * IndexPage prototype.
- *
- * @param {IndexPage} context - The context to use for initiating the discussion, defaults to IndexPage prototype.
- * @returns {Void} - Doesn't return anything.
+ * Initiates a new discussion by opening the composer
  */
-export declare function initiateNewDiscussion(context?: IndexPage<any, any>): void;
+export declare function initiateNewDiscussion(): void;

@@ -1,6 +1,5 @@
-export default class SettingsPage extends ExtensionPage<import("flarum/admin/components/ExtensionPage").ExtensionPageAttrs> {
-    constructor();
-    oninit(vnode: any): void;
-    content(): JSX.Element[];
+/// <reference types="mithril" />
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+export default class SettingsPage extends ExtensionPage {
+    content(): JSX.Element;
 }
-import ExtensionPage from "flarum/admin/components/ExtensionPage";
