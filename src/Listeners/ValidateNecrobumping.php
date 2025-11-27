@@ -43,15 +43,17 @@ class ValidateNecrobumping
         $this->extensions = $extensions;
     }
 
-    public function handle(Saving $event)
+    public function handle(Saving $event): void
     {
         $post = $event->post;
         $discussion = $post->discussion;
 
+        // Skip validation for existing posts, first posts, or if discussion doesn't exist
         if ($post->exists || $post->number === 1 || !$discussion) {
             return;
         }
 
+        // Skip validation for private discussions (fof-byobu integration)
         if ($this->extensions->isEnabled('fof-byobu') && $discussion->is_private) {
             return;
         }
@@ -59,6 +61,7 @@ class ValidateNecrobumping
         $lastPostedAt = $discussion->last_posted_at;
         $days = Util::getDays($this->settings, $discussion);
 
+        // Check if discussion is inactive based on configured days
         if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
             $this->validator->assertValid([
                 'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),

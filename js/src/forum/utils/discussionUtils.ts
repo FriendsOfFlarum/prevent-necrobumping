@@ -1,12 +1,12 @@
-import IndexPage from 'flarum/forum/components/IndexPage';
+import app from 'flarum/forum/app';
 
 /**
- * Initiates a new discussion either using a provided context or the default
- * IndexPage prototype.
- *
- * @param {IndexPage} context - The context to use for initiating the discussion, defaults to IndexPage prototype.
- * @returns {Void} - Doesn't return anything.
+ * Initiates a new discussion by opening the composer
  */
-export function initiateNewDiscussion(context = IndexPage.prototype) {
-  IndexPage.prototype.newDiscussionAction.call(context).catch(() => {});
+export function initiateNewDiscussion(): void {
+  if (app.session.user) {
+    app.composer.load(() => import('flarum/forum/components/DiscussionComposer'), { user: app.session.user }).then(() => app.composer.show());
+  } else {
+    app.modal.show(() => import('flarum/forum/components/LogInModal'));
+  }
 }

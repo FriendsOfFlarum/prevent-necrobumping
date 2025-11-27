@@ -18,17 +18,17 @@ class NecrobumpingPostValidator extends AbstractValidator
     /**
      * {@inheritdoc}
      */
-    protected $rules = [
+    protected array $rules = [
         'fof-necrobumping' => 'accepted',
     ];
 
     /**
      * {@inheritdoc}
      */
-    protected function getMessages()
+    protected function getMessages(): array
     {
         return [
-            'accepted' => app('translator')->trans('fof-prevent-necrobumping.forum.composer.warning.error'),
+            'fof-necrobumping.accepted' => $this->translator->trans('fof-prevent-necrobumping.forum.composer.error'),
         ];
     }
 }
