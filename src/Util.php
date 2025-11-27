@@ -26,7 +26,7 @@ class Util
             $tagDays = $tags->map(function ($tag) use ($settings) {
                 return $settings->get("fof-prevent-necrobumping.days.tags.{$tag->id}");
             })->filter(function ($days) {
-                return $days != null && $days != '' && !is_nan($days) && (int) $days >= 0;
+                return $days !== null && $days !== '' && !is_nan((float) $days);
             });
 
             if ($tagDays->isNotEmpty()) {
