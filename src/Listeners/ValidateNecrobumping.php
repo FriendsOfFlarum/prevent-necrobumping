@@ -13,11 +13,11 @@ namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
 use Flarum\Extension\ExtensionManager;
+use Flarum\Foundation\ValidationException;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\PreventNecrobumping\Util;
 use FoF\PreventNecrobumping\Validators\NecrobumpingPostValidator;
-use Flarum\Foundation\ValidationException;
 use Illuminate\Support\Arr;
 
 class ValidateNecrobumping

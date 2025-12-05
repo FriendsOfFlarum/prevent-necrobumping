@@ -16,8 +16,8 @@ use Flarum\Foundation\AbstractValidator;
 class NecrobumpingSettingsValidator extends AbstractValidator
 {
     protected $rules = [
-        'fof-prevent-necrobumping.days' => 'integer|min:0',
-        'fof-prevent-necrobumping-hard.days' => 'integer|min:0',
+        'fof-prevent-necrobumping.days'         => 'integer|min:0',
+        'fof-prevent-necrobumping-hard.days'    => 'integer|min:0',
     ];
 
     protected function getMessages(): array

@@ -15,9 +15,6 @@ use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Extend;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\Event\Saving as SettingsSaving;
-use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Foundation\ValidationException;
-use Illuminate\Support\Arr;
 use FoF\Extend\Extend as FoFExtend;
 
 return [

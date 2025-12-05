@@ -11,9 +11,9 @@
 
 namespace FoF\PreventNecrobumping\Listeners;
 
+use Flarum\Foundation\ValidationException;
 use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Foundation\ValidationException;
 use FoF\PreventNecrobumping\Validators\NecrobumpingSettingsValidator;
 use Illuminate\Support\Arr;
 
@@ -49,8 +49,8 @@ class ValidateNecrobumpingSettings
             ?? 0);
 
         $this->validator->assertValid([
-            'fof-prevent-necrobumping.days' => $softDays,
-            'fof-prevent-necrobumping-hard.days' => $hardDays,
+            'fof-prevent-necrobumping.days'         => $softDays,
+            'fof-prevent-necrobumping-hard.days'    => $hardDays,
         ]);
 
         if ($softDays < 0) {
