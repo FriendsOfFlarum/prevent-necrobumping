@@ -29,6 +29,7 @@ export default class NecrobumpingCheck extends Component {
     const items = new ItemList();
 
     const customAgreement = app.data['fof-prevent-necrobumping.message.agreement'];
+    const hardLimit = Number(app.forum.attribute('fof-prevent-necrobumping-hard.days') || 0);
 
     items.add('hide', <div className="hide">{this.alertItems().toArray()}</div>, 100);
 
@@ -39,6 +40,16 @@ export default class NecrobumpingCheck extends Component {
       </Checkbox>,
       90
     );
+
+    if (hardLimit > 0) {
+      items.add(
+        'hard-hint',
+        <p className="helpText">
+          {app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.hard_hint', { days: hardLimit })}
+        </p>,
+        80
+      );
+    }
 
     return items;
   }

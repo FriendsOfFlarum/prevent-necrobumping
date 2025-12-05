@@ -17,6 +17,7 @@ use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\PreventNecrobumping\Util;
 use FoF\PreventNecrobumping\Validators\NecrobumpingPostValidator;
+use Flarum\Foundation\ValidationException;
 use Illuminate\Support\Arr;
 
 class ValidateNecrobumping
@@ -59,7 +60,23 @@ class ValidateNecrobumping
         $lastPostedAt = $discussion->last_posted_at;
         $days = Util::getDays($this->settings, $discussion);
 
-        if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
+        $hard = (int) $this->settings->get('fof-prevent-necrobumping-hard.days', 0);
+
+        if (!$lastPostedAt) {
+            return;
+        }
+
+        $diffDays = $lastPostedAt->diffInDays(Carbon::now());
+
+        if ($hard > 0 && $diffDays >= $hard) {
+            $message = resolve('translator')->trans('fof-prevent-necrobumping.forum.composer.warning.hard_error');
+
+            throw new ValidationException([
+                'fof-prevent-necrobumping-hard.days' => $message,
+            ]);
+        }
+
+        if ($lastPostedAt && $days && $diffDays >= $days) {
             $this->validator->assertValid([
                 'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
             ]);

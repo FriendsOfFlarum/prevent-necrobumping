@@ -9,6 +9,7 @@ export default class SettingsPage extends ExtensionPage {
   }
 
   content() {
+    const softLimit = Number(this.setting('fof-prevent-necrobumping.days')() || 0);
     return [
       <div class="container">
         <div class="NecroPage">
@@ -18,6 +19,13 @@ export default class SettingsPage extends ExtensionPage {
             label: app.translator.trans('fof-prevent-necrobumping.admin.settings.days_label'),
             help: app.translator.trans('fof-prevent-necrobumping.admin.settings.days_help'),
             min: 0,
+          })}
+          {this.buildSettingComponent({
+            type: 'number',
+            setting: 'fof-prevent-necrobumping-hard.days',
+            label: app.translator.trans('fof-prevent-necrobumping-hard.admin.settings.days_label'),
+            help: app.translator.trans('fof-prevent-necrobumping-hard.admin.settings.days_help'),
+            min: softLimit || 0,
           })}
           {this.buildSettingComponent({
             type: 'boolean',
