@@ -32,7 +32,7 @@ class ValidateNecrobumpingSettings
     {
         $settingsKeys = [
             'fof-prevent-necrobumping.days',
-            'fof-prevent-necrobumping-hard.days'
+            'fof-prevent-necrobumping-hard.days',
         ];
 
         $data = Arr::only($event->settings, $settingsKeys);
