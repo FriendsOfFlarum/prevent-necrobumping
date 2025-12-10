@@ -44,9 +44,7 @@ export default class NecrobumpingCheck extends Component {
     if (hardLimit > 0) {
       items.add(
         'hard-hint',
-        <p className="helpText">
-          {app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.hard_hint', { days: hardLimit })}
-        </p>,
+        <p className="helpText">{app.translator.trans('fof-prevent-necrobumping.forum.composer.warning.hard_hint', { days: hardLimit })}</p>,
         80
       );
     }
