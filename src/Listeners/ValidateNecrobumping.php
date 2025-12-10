@@ -76,7 +76,7 @@ class ValidateNecrobumping
             ]);
         }
 
-        if ($lastPostedAt && $days && $diffDays >= $days) {
+        if ($days && $diffDays >= $days) {
             $this->validator->assertValid([
                 'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
             ]);
