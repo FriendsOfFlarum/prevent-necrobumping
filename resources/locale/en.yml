@@ -8,6 +8,13 @@ fof-prevent-necrobumping:
         cta_button: => core.ref.start_a_discussion
         confirmation: I understand this discussion is inactive, but my reply is relevant.
       error: This discussion is too old to reply to.
+      warning:
+        lock_error: This discussion has been automatically locked due to inactivity and cannot be replied to.
+    lock_days:
+      alert:
+        title: This discussion will be locked after {days} days.
+        title_now: This discussion is locked due to inactivity.
+        description: This discussion will be locked in {days} days.
 
   admin:
     settings:
@@ -18,7 +25,13 @@ fof-prevent-necrobumping:
 
       show_discussion_cta_label: Show "Start New Discussion" Prompt
       show_discussion_cta_help: Display a suggestion to start a new discussion when users attempt to reply to inactive discussions.
+      lock_days_label: Lock Days
+      lock_days_help: Automatically lock discussions after this many days since the last post. Leave empty to fall back to the inactivity threshold.
+      lock_days_exclude_tags_label: Exclude Tags From Lock Days
+      lock_days_exclude_tags_help: Discussions with any of these tags will not be auto-locked by this extension.
 
       tags_title: Tag-Specific Settings
       tags_help: Override the global inactivity threshold for specific tags. Leave empty to use the default. When multiple tags have different values, the shortest period applies.
       tags_placeholder: Default
+      soft_min_error: Days until a discussion is considered inactive must be 0 or greater.
+      lock_min_error: The auto-lock must be {soft} days or more so it is not earlier than the soft limit.

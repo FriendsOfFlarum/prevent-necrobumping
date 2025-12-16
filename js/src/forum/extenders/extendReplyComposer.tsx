@@ -1,8 +1,10 @@
+import app from 'flarum/forum/app';
 import { extend, override } from 'flarum/common/extend';
 import { isNecrobumping } from '../utils/necrobumping';
 import type { IComposerBodyAttrs } from 'flarum/forum/components/ComposerBody';
 import type Discussion from 'flarum/common/models/Discussion';
 import InactiveDiscussionAlert from '../components/InactiveDiscussionAlert';
+import LockInactiveDiscussionAlert from '../components/LockInactiveDiscussionAlert';
 
 // Extend ReplyComposer attrs type to include discussion
 interface ReplyComposerAttrs extends IComposerBodyAttrs {
@@ -21,12 +23,21 @@ export default function extendReplyComposer() {
 
   extend('flarum/forum/components/ReplyComposer', 'headerItems', function (items) {
     const attrs = this.attrs as unknown as ReplyComposerAttrs;
-    const days = isNecrobumping(attrs.discussion);
+    const softDays = isNecrobumping(attrs.discussion);
+    const lockDays = Number(app.forum.attribute('fof-prevent-necrobumping.lock_days') || 0);
 
-    if (days) {
+    const showLockWarning = softDays && lockDays > 0 && lockDays >= softDays;
+
+    if (softDays) {
       items.add(
         'fof-necrobumping',
-        <InactiveDiscussionAlert days={days} discussion={attrs.discussion} set={(v: boolean) => (this.composer.fields.fofNecrobumping = v)} />
+        <InactiveDiscussionAlert days={softDays} discussion={attrs.discussion} set={(v: boolean) => (this.composer.fields.fofNecrobumping = v)} />
+      );
+    }
+    if (showLockWarning) {
+      items.add(
+        'fof-necrobumping-lock',
+        <LockInactiveDiscussionAlert days={lockDays} discussion={attrs.discussion} />
       );
     }
   });
