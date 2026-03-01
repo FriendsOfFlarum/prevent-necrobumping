@@ -1,38 +1,76 @@
-.FofPreventNecrobumping--Settings {
-  input + .helpText {
-    margin-top: 5px;
-  }
+// Prevent Necrobumping Settings Page Styles
+.PreventNecrobumping-SettingsPage {
+  // Remove list styling from FieldSet components
+  .Form fieldset {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
 
-  .necrobumping--tags {
-    max-height: 50vh;
-    overflow-y: auto;
-
-    .Form-group {
-      display: flex;
-      align-items: center;
-      vertical-align: middle;
-      margin: 5px 5px 5px 0;
-
-      label {
-        flex-basis: 200px;
-        margin: 0;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      input {
-        flex-grow: 1;
-      }
-
-      &.isChild label {
-        text-indent: 20px;
-      }
-
-      &.isSecondary label {
-        color: @muted-color;
+      > li {
+        list-style: none;
       }
     }
   }
 
+  // Tag-Specific Settings Section
+  .PreventNecrobumping-TagSettings {
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .necrobumping--tags {
+      padding: 10px 0;
+      list-style: none;
+    }
+
+    .necrobumping-tag-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 8px 10px;
+      border-radius: var(--border-radius);
+      transition: background-color 0.2s;
+      list-style: none;
+
+      &:hover {
+        background-color: var(--control-bg);
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
+    }
+
+    .necrobumping-tag-label {
+      flex: 0 0 auto;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      max-width: 300px;
+
+      .TagLabel {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .necrobumping-tag-input {
+      width: 100px;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .necrobumping-tag-item--child {
+      .necrobumping-tag-label {
+        padding-left: 30px;
+      }
+    }
+
+    .necrobumping-tag-item--secondary {
+      opacity: 0.8;
+    }
+  }
 }

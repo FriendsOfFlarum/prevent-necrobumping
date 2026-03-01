@@ -1,14 +1,19 @@
 import app from 'flarum/forum/app';
-
 import { extend, override } from 'flarum/common/extend';
 import ReplyComposer from 'flarum/forum/components/ReplyComposer';
+import InactiveDiscussionAlert from './components/InactiveDiscussionAlert';
 
-import NecrobumpingCheck from './components/NecrobumpingCheck';
-
-const isNecrobumping = (app, discussion) => {
+/**
+ * Check if a discussion is considered necrobumping based on configured days
+ *
+ * @param discussion - The discussion to check
+ * @returns The number of days configured for necrobumping, or false if not necrobumping
+ */
+const isNecrobumping = (discussion) => {
   if (!discussion) return false;
 
-  if (app.initializers.has('fof-byobu') && discussion.isPrivateDiscussion()) {
+  // Check if this is a private discussion (fof-byobu integration)
+  if (app.initializers.has('fof-byobu') && discussion.attribute('isPrivateDiscussion')) {
     return false;
   }
 
@@ -24,19 +29,21 @@ const isNecrobumping = (app, discussion) => {
 
 app.initializers.add('fof/prevent-necrobumping', () => {
   override(ReplyComposer.prototype, 'view', function (orig, vnode) {
-    this.attrs.disabled = this.attrs.disabled || (isNecrobumping(app, this.attrs.discussion) && !this.composer.fields.fofNecrobumping);
+    const necrobumpingDays = isNecrobumping(this.attrs.discussion);
+    this.attrs.disabled = this.attrs.disabled || (!!necrobumpingDays && !this.composer.fields.fofNecrobumping);
 
     return orig(vnode);
   });
 
   extend(ReplyComposer.prototype, 'headerItems', function (items) {
-    const days = isNecrobumping(app, this.attrs.discussion);
+    const days = isNecrobumping(this.attrs.discussion);
 
     if (days) {
       items.add(
         'fof-necrobumping',
-        NecrobumpingCheck.component({
+        InactiveDiscussionAlert.component({
           days,
+          discussion: this.attrs.discussion,
           set: (v) => (this.composer.fields.fofNecrobumping = v),
         })
       );
@@ -49,5 +56,5 @@ app.initializers.add('fof/prevent-necrobumping', () => {
 });
 
 export const components = {
-  NecrobumpingCheck,
+  InactiveDiscussionAlert,
 };

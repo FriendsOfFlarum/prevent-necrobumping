@@ -14,7 +14,6 @@ namespace FoF\PreventNecrobumping;
 use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Extend;
 use Flarum\Post\Event\Saving;
-use FoF\Extend\Extend as FoFExtend;
 
 return [
     (new Extend\Frontend('forum'))
@@ -27,11 +26,8 @@ return [
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
-    (new FoFExtend\ExtensionSettings())
-        ->setPrefix('fof-prevent-necrobumping.')
-        ->addKeys(['message.title', 'message.description', 'message.agreement']),
-
     (new Extend\Settings())
+        ->default('fof-prevent-necrobumping.days', 0)
         ->default('fof-prevent-necrobumping.show_discussion_cta', false)
         ->serializeToForum('fof-prevent-necrobumping.show_discussion_cta', 'fof-prevent-necrobumping.show_discussion_cta', 'boolval'),
 
