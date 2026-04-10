@@ -18,10 +18,10 @@ use Flarum\Api\Schema\Attribute;
 use Flarum\Extend;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\Event\Saving as SettingsSaving;
-use Flarum\Discussion\Discussion;
 use Flarum\Settings\SettingsRepositoryInterface;
-use FoF\PreventNecrobumping\Policy\DiscussionPolicyExtender;
 use FoF\PreventNecrobumping\Util;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsCommand;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsSchedule;
 
 return [
     (new Extend\Frontend('forum'))
@@ -61,6 +61,7 @@ return [
         ->listen(Saving::class, Listeners\ValidateNecrobumping::class)
         ->listen(SettingsSaving::class, Listeners\ValidateNecrobumpingSettings::class),
 
-    (new Extend\Policy())
-        ->modelPolicy(Discussion::class, DiscussionPolicyExtender::class)
+    (new Extend\Console())
+        ->command(LockInactiveDiscussionsCommand::class)
+        ->schedule(LockInactiveDiscussionsCommand::class, LockInactiveDiscussionsSchedule::class),
 ];

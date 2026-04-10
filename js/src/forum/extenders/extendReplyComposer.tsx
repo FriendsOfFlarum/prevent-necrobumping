@@ -11,6 +11,14 @@ interface ReplyComposerAttrs extends IComposerBodyAttrs {
   discussion: Discussion;
 }
 
+function lockDays(): number {
+  return Number(app.forum.attribute('fof-prevent-necrobumping.lock_days') || 0);
+}
+
+function shouldShowLockWarning(softDays: number | false): softDays is number {
+  return !!softDays && lockDays() > 0 && lockDays() >= softDays;
+}
+
 export default function extendReplyComposer() {
   override('flarum/forum/components/ReplyComposer', 'view', function (orig) {
     const attrs = this.attrs as unknown as ReplyComposerAttrs;
@@ -24,9 +32,6 @@ export default function extendReplyComposer() {
   extend('flarum/forum/components/ReplyComposer', 'headerItems', function (items) {
     const attrs = this.attrs as unknown as ReplyComposerAttrs;
     const softDays = isNecrobumping(attrs.discussion);
-    const lockDays = Number(app.forum.attribute('fof-prevent-necrobumping.lock_days') || 0);
-
-    const showLockWarning = softDays && lockDays > 0 && lockDays >= softDays;
 
     if (softDays) {
       items.add(
@@ -34,10 +39,11 @@ export default function extendReplyComposer() {
         <InactiveDiscussionAlert days={softDays} discussion={attrs.discussion} set={(v: boolean) => (this.composer.fields.fofNecrobumping = v)} />
       );
     }
-    if (showLockWarning) {
+
+    if (shouldShowLockWarning(softDays)) {
       items.add(
         'fof-necrobumping-lock',
-        <LockInactiveDiscussionAlert days={lockDays} discussion={attrs.discussion} />
+        <LockInactiveDiscussionAlert days={lockDays()} discussion={attrs.discussion} />
       );
     }
   });

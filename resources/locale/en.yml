@@ -12,9 +12,9 @@ fof-prevent-necrobumping:
         lock_error: This discussion has been automatically locked due to inactivity and cannot be replied to.
     lock_days:
       alert:
-        title: This discussion will be locked after {days} days.
+        title: Replies to this discussion will be blocked after {days} days.
         title_now: This discussion is locked due to inactivity.
-        description: This discussion will be locked in {days} days.
+        description: Replies to this discussion will be blocked in {days} days.
 
   admin:
     settings:
