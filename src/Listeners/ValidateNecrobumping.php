@@ -13,7 +13,6 @@ namespace FoF\PreventNecrobumping\Listeners;
 
 use Carbon\Carbon;
 use Flarum\Extension\ExtensionManager;
-use Flarum\Foundation\ValidationException;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\PreventNecrobumping\Util;
@@ -44,10 +43,6 @@ class ValidateNecrobumping
             return;
         }
 
-        if ($this->isHardBlocked($diffDays)) {
-            $this->throwHardBlock();
-        }
-
         if ($this->requiresConfirmation($discussion, $diffDays)) {
             $this->assertConfirmation($event);
         }
@@ -75,13 +70,6 @@ class ValidateNecrobumping
         return $discussion->last_posted_at->diffInDays(Carbon::now());
     }
 
-    protected function isHardBlocked(int $diffDays): bool
-    {
-        $hard = (int) $this->settings->get('fof-prevent-necrobumping-hard.days', 0);
-
-        return $hard > 0 && $diffDays >= $hard;
-    }
-
     protected function requiresConfirmation($discussion, int $diffDays): bool
     {
         $days = Util::getDays($this->settings, $discussion);
@@ -93,15 +81,6 @@ class ValidateNecrobumping
     {
         $this->validator->assertValid([
             'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
-        ]);
-    }
-
-    protected function throwHardBlock(): void
-    {
-        $message = resolve('translator')->trans('fof-prevent-necrobumping.forum.composer.warning.hard_error');
-
-        throw new ValidationException([
-            'fof-prevent-necrobumping-hard.days' => $message,
         ]);
     }
 }

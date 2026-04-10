@@ -16,6 +16,8 @@ use Flarum\Extend;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\Event\Saving as SettingsSaving;
 use FoF\Extend\Extend as FoFExtend;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsCommand;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsSchedule;
 
 return [
     (new Extend\Frontend('forum'))
@@ -40,6 +42,10 @@ return [
     (new Extend\Event())
         ->listen(Saving::class, Listeners\ValidateNecrobumping::class)
         ->listen(SettingsSaving::class, Listeners\ValidateNecrobumpingSettings::class),
+
+    (new Extend\Console())
+        ->command(LockInactiveDiscussionsCommand::class)
+        ->schedule(LockInactiveDiscussionsCommand::class, LockInactiveDiscussionsSchedule::class),
 
     (new Extend\ApiSerializer(DiscussionSerializer::class))
         ->attributes(Listeners\AddForumAttributes::class),

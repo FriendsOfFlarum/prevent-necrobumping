@@ -1,7 +1,7 @@
 import app from 'flarum/admin/app';
+import isExtensionEnabled from 'flarum/admin/utils/isExtensionEnabled';
 import classList from 'flarum/common/utils/classList';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
-import sortTags from 'flarum/tags/utils/sortTags';
 
 export default class SettingsPage extends ExtensionPage {
   oninit(vnode) {
@@ -10,6 +10,8 @@ export default class SettingsPage extends ExtensionPage {
 
   content() {
     const softLimit = Number(this.setting('fof-prevent-necrobumping.days')() || 0);
+    const lifecycleEnabled = isExtensionEnabled('glowingblue-discussion-lifecycle');
+
     return [
       <div class="container">
         <div class="NecroPage">
@@ -27,6 +29,7 @@ export default class SettingsPage extends ExtensionPage {
             help: app.translator.trans('fof-prevent-necrobumping-hard.admin.settings.days_help'),
             min: softLimit || 0,
           })}
+          {lifecycleEnabled && <p className="helpText">{app.translator.trans('fof-prevent-necrobumping-hard.admin.settings.lifecycle_help')}</p>}
           {this.buildSettingComponent({
             type: 'boolean',
             setting: 'fof-prevent-necrobumping.show_discussion_cta',
@@ -57,7 +60,7 @@ export default class SettingsPage extends ExtensionPage {
               <p className="helpText">{app.translator.trans('fof-prevent-necrobumping.admin.settings.tags_help')}</p>
 
               <div className="necrobumping--tags">
-                {sortTags(app.store.all('tags')).map((tag) => (
+                {app.store.all('tags').map((tag) => (
                   <div className={classList(['Form-group', tag.isChild() && 'isChild', !tag.isPrimary() && !tag.isChild() && 'isSecondary'])}>
                     {this.buildSettingComponent({
                       type: 'number',

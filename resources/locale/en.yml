@@ -6,8 +6,8 @@ fof-prevent-necrobumping:
         description: It is very likely that it does not need any further discussion and thus bumping it serves no purpose.
         cta: Would you like to start a new discussion instead?
         cta_button: => core.ref.start_a_discussion
-        hard_error: Replies are blocked because this discussion is past the hard necrobumping limit.
-        hard_hint: Replies will be blocked after {days} days (hard limit).
+        hard_error: This discussion is locked due to inactivity.
+        hard_hint: Replies to this discussion will be blocked after {days} days.
         checkbox_label: I am aware that this discussion is rather old but would still like to reply.
         error: This discussion is too old to reply to.
 
@@ -32,5 +32,6 @@ fof-prevent-necrobumping:
 fof-prevent-necrobumping-hard:
   admin:
     settings:
-      days_label: Hard cutoff (days)
-      days_help: After this many days, replies will be blocked entirely. Use <code>0</code> to disable the hard block. Should be greater than or equal to the soft limit above.
+      days_label: Lock days
+      days_help: After this many days, replies will be blocked. Use <code>0</code> to disable automatic locking. Should be greater than or equal to the soft limit above.
+      lifecycle_help: Discussion Lifecycle is enabled, so it will handle the actual locking. This setting still controls when replies should be blocked.
