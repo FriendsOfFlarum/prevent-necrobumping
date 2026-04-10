@@ -1,4 +1,5 @@
 import app from 'flarum/admin/app';
+import isExtensionEnabled from 'flarum/admin/utils/isExtensionEnabled';
 import classList from 'flarum/common/utils/classList';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import FieldSet from 'flarum/common/components/FieldSet';
@@ -46,6 +47,8 @@ export default class SettingsPage extends ExtensionPage {
 
   content() {
     const softLimit = Number(this.setting('fof-prevent-necrobumping.days')() || 0);
+    const lifecycleEnabled = isExtensionEnabled('glowingblue-discussion-lifecycle');
+
     return (
       <div className="ExtensionPage-settings">
         <div className="container">
@@ -66,6 +69,11 @@ export default class SettingsPage extends ExtensionPage {
                 help: app.translator.trans('fof-prevent-necrobumping.admin.settings.lock_days_help'),
                 min: softLimit || 0,
               })}
+              {lifecycleEnabled && (
+                <p className="helpText">
+                  {app.translator.trans('fof-prevent-necrobumping.admin.settings.lock_days_lifecycle_help')}
+                </p>
+              )}
               {'flarum-tags' in flarum.extensions && (
                 <div className="Form-group">
                   <label>{app.translator.trans('fof-prevent-necrobumping.admin.settings.lock_days_exclude_tags_label')}</label>
