@@ -22,26 +22,11 @@ use Illuminate\Support\Arr;
 
 class ValidateNecrobumping
 {
-    /**
-     * @var NecrobumpingPostValidator
-     */
-    protected $validator;
-
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    private $settings;
-
-    /**
-     * @var ExtensionManager
-     */
-    protected $extensions;
-
-    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings, ExtensionManager $extensions)
-    {
-        $this->validator = $validator;
-        $this->settings = $settings;
-        $this->extensions = $extensions;
+    public function __construct(
+        protected NecrobumpingPostValidator $validator,
+        private SettingsRepositoryInterface $settings,
+        protected ExtensionManager $extensions
+    ) {
     }
 
     public function handle(Saving $event)
@@ -49,37 +34,74 @@ class ValidateNecrobumping
         $post = $event->post;
         $discussion = $post->discussion;
 
-        if ($post->exists || $post->number === 1 || !$discussion) {
+        if (!$this->shouldValidate($post, $discussion)) {
             return;
+        }
+
+        $diffDays = $this->discussionAgeInDays($discussion);
+
+        if ($diffDays === null) {
+            return;
+        }
+
+        if ($this->isHardBlocked($diffDays)) {
+            $this->throwHardBlock();
+        }
+
+        if ($this->requiresConfirmation($discussion, $diffDays)) {
+            $this->assertConfirmation($event);
+        }
+    }
+
+    protected function shouldValidate($post, $discussion): bool
+    {
+        if ($post->exists || $post->number === 1 || !$discussion) {
+            return false;
         }
 
         if ($this->extensions->isEnabled('fof-byobu') && $discussion->is_private) {
-            return;
+            return false;
         }
 
-        $lastPostedAt = $discussion->last_posted_at;
-        $days = Util::getDays($this->settings, $discussion);
+        return true;
+    }
 
+    protected function discussionAgeInDays($discussion): ?int
+    {
+        if (!$discussion->last_posted_at) {
+            return null;
+        }
+
+        return $discussion->last_posted_at->diffInDays(Carbon::now());
+    }
+
+    protected function isHardBlocked(int $diffDays): bool
+    {
         $hard = (int) $this->settings->get('fof-prevent-necrobumping-hard.days', 0);
 
-        if (!$lastPostedAt) {
-            return;
-        }
+        return $hard > 0 && $diffDays >= $hard;
+    }
 
-        $diffDays = $lastPostedAt->diffInDays(Carbon::now());
+    protected function requiresConfirmation($discussion, int $diffDays): bool
+    {
+        $days = Util::getDays($this->settings, $discussion);
 
-        if ($hard > 0 && $diffDays >= $hard) {
-            $message = resolve('translator')->trans('fof-prevent-necrobumping.forum.composer.warning.hard_error');
+        return $days && $diffDays >= $days;
+    }
 
-            throw new ValidationException([
-                'fof-prevent-necrobumping-hard.days' => $message,
-            ]);
-        }
+    protected function assertConfirmation(Saving $event): void
+    {
+        $this->validator->assertValid([
+            'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
+        ]);
+    }
 
-        if ($days && $diffDays >= $days) {
-            $this->validator->assertValid([
-                'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
-            ]);
-        }
+    protected function throwHardBlock(): void
+    {
+        $message = resolve('translator')->trans('fof-prevent-necrobumping.forum.composer.warning.hard_error');
+
+        throw new ValidationException([
+            'fof-prevent-necrobumping-hard.days' => $message,
+        ]);
     }
 }
