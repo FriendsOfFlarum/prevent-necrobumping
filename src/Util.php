@@ -19,14 +19,14 @@ class Util
     public static function getDays(SettingsRepositoryInterface $settings, Discussion $discussion): ?int
     {
         $days = $settings->get('fof-prevent-necrobumping.days');
-        /** @phpstan-ignore-next-line */
         $tags = $discussion->tags;
 
+        /** @phpstan-ignore-next-line */
         if ($tags && $tags->isNotEmpty()) {
             $tagDays = $tags->map(function ($tag) use ($settings) {
                 return $settings->get("fof-prevent-necrobumping.days.tags.{$tag->id}");
             })->filter(function ($days) {
-                return $days != null && $days != '' && !is_nan($days) && (int) $days >= 0;
+                return $days !== null && $days !== '' && !is_nan((float) $days);
             });
 
             if ($tagDays->isNotEmpty()) {
