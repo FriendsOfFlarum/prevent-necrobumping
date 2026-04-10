@@ -16,6 +16,14 @@ use Flarum\Settings\SettingsRepositoryInterface;
 
 class Util
 {
+    public const LOCK_DAYS_KEY = 'fof-prevent-necrobumping.lock_days';
+    public const LOCK_EXCLUDED_TAGS_KEY = 'fof-prevent-necrobumping.lock_days_exclude_tags';
+
+    public static function getConfiguredLockDays(SettingsRepositoryInterface $settings): int
+    {
+        return (int) $settings->get(self::LOCK_DAYS_KEY, 0);
+    }
+
     public static function getDays(SettingsRepositoryInterface $settings, Discussion $discussion): ?int
     {
         $days = $settings->get('fof-prevent-necrobumping.days');
@@ -37,5 +45,32 @@ class Util
         }
 
         return is_nan((float) $days) || (int) $days < 1 ? null : (int) $days;
+    }
+
+    public static function getExcludedTagIds(SettingsRepositoryInterface $settings): array
+    {
+        $raw = (string) $settings->get(self::LOCK_EXCLUDED_TAGS_KEY, '');
+
+        return array_values(array_filter(array_map('intval', explode(',', $raw))));
+    }
+
+    public static function getAutoLockDays(SettingsRepositoryInterface $settings, Discussion $discussion): ?int
+    {
+        $days = self::getConfiguredLockDays($settings);
+
+        return $days > 0 ? $days : null;
+    }
+
+    public static function hasExcludedTag(Discussion $discussion, array $excludedTagIds): bool
+    {
+        if ($excludedTagIds === []) {
+            return false;
+        }
+
+        if ($discussion->relationLoaded('tags')) {
+            return $discussion->tags && $discussion->tags->whereIn('id', $excludedTagIds)->isNotEmpty();
+        }
+
+        return $discussion->tags()->whereIn('tags.id', $excludedTagIds)->exists();
     }
 }

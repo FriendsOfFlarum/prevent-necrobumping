@@ -21,26 +21,11 @@ use Illuminate\Support\Arr;
 
 class ValidateNecrobumping
 {
-    /**
-     * @var NecrobumpingPostValidator
-     */
-    protected $validator;
-
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    private $settings;
-
-    /**
-     * @var ExtensionManager
-     */
-    protected $extensions;
-
-    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings, ExtensionManager $extensions)
-    {
-        $this->validator = $validator;
-        $this->settings = $settings;
-        $this->extensions = $extensions;
+    public function __construct(
+        protected NecrobumpingPostValidator $validator,
+        private SettingsRepositoryInterface $settings,
+        protected ExtensionManager $extensions
+    ) {
     }
 
     public function handle(Saving $event): void
@@ -48,24 +33,42 @@ class ValidateNecrobumping
         $post = $event->post;
         $discussion = $post->discussion;
 
-        // Skip validation for existing posts, first posts, or if discussion doesn't exist
+        if (!$this->shouldValidate($post, $discussion)) {
+            return;
+        }
+
+        if (!$this->requiresConfirmation($discussion)) {
+            return;
+        }
+
+        $this->assertConfirmation($event);
+    }
+
+    protected function shouldValidate($post, $discussion): bool
+    {
         if ($post->exists || $post->number === 1 || !$discussion) {
-            return;
+            return false;
         }
 
-        // Skip validation for private discussions (fof-byobu integration)
         if ($this->extensions->isEnabled('fof-byobu') && $discussion->is_private) {
-            return;
+            return false;
         }
 
+        return true;
+    }
+
+    protected function requiresConfirmation($discussion): bool
+    {
         $lastPostedAt = $discussion->last_posted_at;
         $days = Util::getDays($this->settings, $discussion);
 
-        // Check if discussion is inactive based on configured days
-        if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
-            $this->validator->assertValid([
-                'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
-            ]);
-        }
+        return $lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days;
+    }
+
+    protected function assertConfirmation(Saving $event): void
+    {
+        $this->validator->assertValid([
+            'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
+        ]);
     }
 }

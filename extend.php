@@ -12,9 +12,16 @@
 namespace FoF\PreventNecrobumping;
 
 use Flarum\Api\Resource\DiscussionResource;
+use Flarum\Api\Resource\ForumResource;
 use Flarum\Api\Resource\PostResource;
+use Flarum\Api\Schema\Attribute;
 use Flarum\Extend;
 use Flarum\Post\Event\Saving;
+use Flarum\Settings\Event\Saving as SettingsSaving;
+use Flarum\Settings\SettingsRepositoryInterface;
+use FoF\PreventNecrobumping\Util;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsCommand;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsSchedule;
 
 return [
     (new Extend\Frontend('forum'))
@@ -29,8 +36,20 @@ return [
 
     (new Extend\Settings())
         ->default('fof-prevent-necrobumping.days', 0)
+        ->default('fof-prevent-necrobumping.lock_days', 0)
+        ->default('fof-prevent-necrobumping.lock_days_exclude_tags', '')
         ->default('fof-prevent-necrobumping.show_discussion_cta', false)
         ->serializeToForum('fof-prevent-necrobumping.show_discussion_cta', 'fof-prevent-necrobumping.show_discussion_cta', 'boolval'),
+
+    (new Extend\ApiResource(ForumResource::class))
+        ->fields(function () {
+            $settings = resolve(SettingsRepositoryInterface::class);
+            return [
+                Attribute::make('fof-prevent-necrobumping.lock_days')->get(
+                    fn () => Util::getConfiguredLockDays($settings)
+                ),
+            ];
+        }),
 
     (new Extend\ApiResource(DiscussionResource::class))
         ->fields(Api\AddDiscussionResourceFields::class),
@@ -39,5 +58,10 @@ return [
         ->fields(Api\AddPostResourceFields::class),
 
     (new Extend\Event())
-        ->listen(Saving::class, Listeners\ValidateNecrobumping::class),
+        ->listen(Saving::class, Listeners\ValidateNecrobumping::class)
+        ->listen(SettingsSaving::class, Listeners\ValidateNecrobumpingSettings::class),
+
+    (new Extend\Console())
+        ->command(LockInactiveDiscussionsCommand::class)
+        ->schedule(LockInactiveDiscussionsCommand::class, LockInactiveDiscussionsSchedule::class),
 ];
