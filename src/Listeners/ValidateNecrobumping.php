@@ -21,26 +21,11 @@ use Illuminate\Support\Arr;
 
 class ValidateNecrobumping
 {
-    /**
-     * @var NecrobumpingPostValidator
-     */
-    protected $validator;
-
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    private $settings;
-
-    /**
-     * @var ExtensionManager
-     */
-    protected $extensions;
-
-    public function __construct(NecrobumpingPostValidator $validator, SettingsRepositoryInterface $settings, ExtensionManager $extensions)
-    {
-        $this->validator = $validator;
-        $this->settings = $settings;
-        $this->extensions = $extensions;
+    public function __construct(
+        protected NecrobumpingPostValidator $validator,
+        private SettingsRepositoryInterface $settings,
+        protected ExtensionManager $extensions
+    ) {
     }
 
     public function handle(Saving $event)
@@ -48,21 +33,54 @@ class ValidateNecrobumping
         $post = $event->post;
         $discussion = $post->discussion;
 
-        if ($post->exists || $post->number === 1 || !$discussion) {
+        if (!$this->shouldValidate($post, $discussion)) {
             return;
+        }
+
+        $diffDays = $this->discussionAgeInDays($discussion);
+
+        if ($diffDays === null) {
+            return;
+        }
+
+        if ($this->requiresConfirmation($discussion, $diffDays)) {
+            $this->assertConfirmation($event);
+        }
+    }
+
+    protected function shouldValidate($post, $discussion): bool
+    {
+        if ($post->exists || $post->number === 1 || !$discussion) {
+            return false;
         }
 
         if ($this->extensions->isEnabled('fof-byobu') && $discussion->is_private) {
-            return;
+            return false;
         }
 
-        $lastPostedAt = $discussion->last_posted_at;
+        return true;
+    }
+
+    protected function discussionAgeInDays($discussion): ?int
+    {
+        if (!$discussion->last_posted_at) {
+            return null;
+        }
+
+        return $discussion->last_posted_at->diffInDays(Carbon::now());
+    }
+
+    protected function requiresConfirmation($discussion, int $diffDays): bool
+    {
         $days = Util::getDays($this->settings, $discussion);
 
-        if ($lastPostedAt && $days && $lastPostedAt->diffInDays(Carbon::now()) >= $days) {
-            $this->validator->assertValid([
-                'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
-            ]);
-        }
+        return $days && $diffDays >= $days;
+    }
+
+    protected function assertConfirmation(Saving $event): void
+    {
+        $this->validator->assertValid([
+            'fof-necrobumping' => Arr::get($event->data, 'attributes.fof-necrobumping'),
+        ]);
     }
 }

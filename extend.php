@@ -14,7 +14,10 @@ namespace FoF\PreventNecrobumping;
 use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Extend;
 use Flarum\Post\Event\Saving;
+use Flarum\Settings\Event\Saving as SettingsSaving;
 use FoF\Extend\Extend as FoFExtend;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsCommand;
+use FoF\PreventNecrobumping\Console\LockInactiveDiscussionsSchedule;
 
 return [
     (new Extend\Frontend('forum'))
@@ -33,10 +36,16 @@ return [
 
     (new Extend\Settings())
         ->default('fof-prevent-necrobumping.show_discussion_cta', false)
-        ->serializeToForum('fof-prevent-necrobumping.show_discussion_cta', 'fof-prevent-necrobumping.show_discussion_cta', 'boolval'),
+        ->serializeToForum('fof-prevent-necrobumping.show_discussion_cta', 'fof-prevent-necrobumping.show_discussion_cta', 'boolval')
+        ->serializeToForum('fof-prevent-necrobumping-hard.days', 'fof-prevent-necrobumping-hard.days', 'intval'),
 
     (new Extend\Event())
-        ->listen(Saving::class, Listeners\ValidateNecrobumping::class),
+        ->listen(Saving::class, Listeners\ValidateNecrobumping::class)
+        ->listen(SettingsSaving::class, Listeners\ValidateNecrobumpingSettings::class),
+
+    (new Extend\Console())
+        ->command(LockInactiveDiscussionsCommand::class)
+        ->schedule(LockInactiveDiscussionsCommand::class, LockInactiveDiscussionsSchedule::class),
 
     (new Extend\ApiSerializer(DiscussionSerializer::class))
         ->attributes(Listeners\AddForumAttributes::class),
