@@ -26,7 +26,12 @@ export default function extendReplyComposer() {
     if (days) {
       items.add(
         'fof-necrobumping',
-        <InactiveDiscussionAlert days={days} discussion={attrs.discussion} set={(v: boolean) => (this.composer.fields.fofNecrobumping = v)} />
+        <InactiveDiscussionAlert
+          days={days}
+          discussion={attrs.discussion}
+          checked={!!this.composer.fields.fofNecrobumping}
+          set={(v: boolean) => (this.composer.fields.fofNecrobumping = v)}
+        />
       );
     }
   });

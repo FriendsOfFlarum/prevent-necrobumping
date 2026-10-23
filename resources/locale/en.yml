@@ -7,6 +7,8 @@ fof-prevent-necrobumping:
         cta: Consider starting a fresh discussion if you have a new question or perspective.
         cta_button: => core.ref.start_a_discussion
         confirmation: I understand this discussion is inactive, but my reply is relevant.
+        confirmed: Replying to an inactive discussion.
+        undo: Undo
       error: This discussion is too old to reply to.
 
   admin:
